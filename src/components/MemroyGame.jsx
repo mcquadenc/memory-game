@@ -69,7 +69,7 @@ const MemoryGame = () => {
           Reiniciar Jogo
         </button>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 100px)', gap: '10px', marginTop: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 100px)', gap: '10px', marginTop: '20px', justifyContent: 'center'}}>
         {cards.map((card, index) => {
           const isFlipped = flippedCards.includes(index) || matchedCards.includes(index);
           return (
