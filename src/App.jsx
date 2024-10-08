@@ -9,7 +9,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Jogo da Memória</h1>
+      <h1>Jogo da Memória da Itaewon Party</h1>
       <MemoryGame />
     </div>
   );
