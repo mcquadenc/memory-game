@@ -6,27 +6,19 @@ const cardImages = [
   '🍎', '🍌', '🍉', '🍇', '🍓', '🍒'
 ];
 
-const shuffleCards = (array) => {
-  return array.sort(() => Math.random() - 0.5);
-};
+const shuffleCards = (array) => array.sort(() => Math.random() - 0.5);
 
 const MemoryGame = () => {
   const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
-  const [score, setScore] = useState(0);
+  const [players, setPlayers] = useState([{ name: 'Jogador 1', score: 0 }, { name: 'Jogador 2', score: 0 }]);
+  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
 
-  // Carregar a pontuação do localStorage ao iniciar o jogo
   useEffect(() => {
-    const storedScore = localStorage.getItem('memoryGameScore');
-    setScore(storedScore ? parseInt(storedScore) : 0);
     setCards(shuffleCards(cardImages));
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem('memoryGameScore', score);
-  }, [score]);
 
   const handleCardClick = (index) => {
     if (gameEnded || flippedCards.length === 2 || flippedCards.includes(index) || matchedCards.includes(index)) return;
@@ -38,14 +30,21 @@ const MemoryGame = () => {
       const [firstIndex, secondIndex] = newFlippedCards;
       if (cards[firstIndex] === cards[secondIndex]) {
         setMatchedCards((prev) => [...prev, firstIndex, secondIndex]);
-        setScore((prevScore) => prevScore + 10);
+        setPlayers((prevPlayers) => {
+          const updatedPlayers = [...prevPlayers];
+          updatedPlayers[currentPlayerIndex].score += 10;
+          return updatedPlayers;
+        });
       }
-      setTimeout(() => setFlippedCards([]), 1000);
+      setTimeout(() => {
+        setFlippedCards([]);
+        setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+      }, 1000);
     }
   };
 
   const handleRevealAll = () => {
-    setFlippedCards([...Array(cards.length).keys()]); // Revela todos os cards
+    setFlippedCards([...Array(cards.length).keys()]);
     setGameEnded(true);
   };
 
@@ -53,14 +52,20 @@ const MemoryGame = () => {
     setCards(shuffleCards(cardImages));
     setFlippedCards([]);
     setMatchedCards([]);
-    setScore(0);
     setGameEnded(false);
-    localStorage.setItem('memoryGameScore', 0);
+    setPlayers(players.map(player => ({ ...player, score: 0 })));
+    setCurrentPlayerIndex(0);
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Pontuação: {score}</h2>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+      <h1>Jogo da Memória</h1>
+      <h2>Vez de: {players[currentPlayerIndex].name}</h2>
+      <div style={{ margin: '10px 0' }}>
+        {players.map((player, index) => (
+          <h3 key={index}>{player.name}: {player.score} pontos</h3>
+        ))}
+      </div>
       <div style={{ margin: '10px 0' }}>
         <button onClick={handleRevealAll} disabled={gameEnded} style={{ marginRight: '10px' }}>
           Exibir Todos
@@ -69,15 +74,22 @@ const MemoryGame = () => {
           Reiniciar Jogo
         </button>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 100px)', gap: '10px', marginTop: '20px', justifyContent: 'center'}}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
+          gap: '10px',
+          marginTop: '20px',
+          justifyContent: 'center'
+        }}
+      >
         {cards.map((card, index) => {
           const isFlipped = flippedCards.includes(index) || matchedCards.includes(index);
           return (
             <motion.div
               key={index}
               style={{
-                width: '100px',
-                height: '100px',
+                aspectRatio: '2 / 3',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
