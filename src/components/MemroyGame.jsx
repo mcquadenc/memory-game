@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { mirrorEasing, motion } from 'framer-motion';
 
 const cardImages = [
   '🍎', '🍌', '🍉', '🍇', '🍓', '🍒', 
@@ -12,7 +12,7 @@ const MemoryGame = () => {
   const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
-  const [players, setPlayers] = useState([{ name: 'Jogador 1', score: 0 }, { name: 'Jogador 2', score: 0 }]);
+  const [players, setPlayers] = useState([{ name: 'Doramiga 1', score: 0 }, { name: 'Doramiga 2', score: 0 }]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
 
@@ -59,12 +59,11 @@ const MemoryGame = () => {
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h1>Jogo da Memória</h1>
-      <h2>Vez de: {players[currentPlayerIndex].name}</h2>
-      <div style={{ margin: '10px 0' }}>
-        {players.map((player, index) => (
-          <h3 key={index}>{player.name}: {player.score} pontos</h3>
-        ))}
+      <h2>Memórias de Itaewon</h2>
+      <p>Vez de: <strong>{players[currentPlayerIndex].name}</strong></p>
+      <span style={{ fontSize: '3rem'}}>{players[0].score} x {players[1].score}</span>
+      <div style={{ margin: '10px 0', display: 'flex', justifyContent: 'space-between',  fontSize: '2.5rem', alignItems: 'center' }}>  
+        <span>{players[0].name}</span> <span style={{fontSize: '1rem'}}> vs </span> <span>{players[1].name}</span>          
       </div>
       <div style={{ margin: '10px 0' }}>
         <button onClick={handleRevealAll} disabled={gameEnded} style={{ marginRight: '10px' }}>
@@ -77,7 +76,7 @@ const MemoryGame = () => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))',
           gap: '10px',
           marginTop: '20px',
           justifyContent: 'center'
