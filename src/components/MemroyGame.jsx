@@ -134,7 +134,7 @@ const MemoryGame = () => {
               transition={{ duration: 0.5 }}
             >
               {isFlipped ? (
-                <img src={card} alt="card" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <span style={{ borderRadius: '8px', display: 'block', width:'100%', height: '100%', backgroundImage:`url(${card})`,  backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></span>
               ) : (
                 <span style={{ fontSize: '24px', color: '#fff' }}>❓</span>
               )}
